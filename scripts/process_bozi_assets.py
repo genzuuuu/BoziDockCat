@@ -12,6 +12,7 @@ ROOT = Path(__file__).resolve().parents[1]
 ASSETS = Path("/Users/zu/.cursor/projects/Users-zu-Dropbox-DockCat/assets")
 DEFAULT_CAT = ROOT / "DockCatApp/DockCat/Resources/DefaultCat"
 CAT_PACK = ROOT / "CatPacks/bozi"
+MANIFEST_TEMPLATE = ROOT / "CatPacks/bozi/manifest.json"
 
 MAPPING = {
     "bozi_dialogue_v2.png": "poses/dialogue/stand.png",
@@ -59,13 +60,11 @@ def fit_canvas(img: Image.Image, size: int = 1024) -> Image.Image:
     return canvas
 
 
-def export_pack(target_root: Path) -> None:
+def export_pack(target_root: Path, manifest_src: Path) -> None:
     if target_root.exists():
         shutil.rmtree(target_root)
     target_root.mkdir(parents=True, exist_ok=True)
-    manifest_src = ROOT / "CatPacks/bozi/manifest.json"
-    if manifest_src.exists():
-        shutil.copy2(manifest_src, target_root / "manifest.json")
+    shutil.copy2(manifest_src, target_root / "manifest.json")
     for src_name, rel_path in MAPPING.items():
         src = ASSETS / src_name
         if not src.exists():
@@ -77,8 +76,10 @@ def export_pack(target_root: Path) -> None:
 
 
 def main() -> None:
-    export_pack(DEFAULT_CAT)
-    export_pack(CAT_PACK)
+    if not MANIFEST_TEMPLATE.exists():
+        raise FileNotFoundError(MANIFEST_TEMPLATE)
+    export_pack(DEFAULT_CAT, MANIFEST_TEMPLATE)
+    export_pack(CAT_PACK, MANIFEST_TEMPLATE)
     print(f"Exported Bozi assets to {DEFAULT_CAT} and {CAT_PACK}")
 
 
