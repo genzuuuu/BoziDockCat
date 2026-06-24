@@ -1,0 +1,10 @@
+.DS_Store
+*.xcuserstate
+xcuserdata/
+DerivedData/
+DockCatApp/DerivedDataDebug/
+build/
+*.ipa
+*.dSYM.zip
+*.dSYM
+DockCat.zip
